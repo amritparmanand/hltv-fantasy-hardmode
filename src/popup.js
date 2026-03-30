@@ -27,32 +27,66 @@ function initPopup() {
     });
 
     toggle.addEventListener('change', () => {
-      console.log('[HLTV Helper] toggle change event triggered');
-      const val = !!toggle.checked;
-      if (chrome.storage && chrome.storage.sync) {
-        chrome.storage.sync.set({[STORAGE_KEY]: val});
-        console.log('[HLTV Helper] popup set state=', val);
-      } else {
-        console.warn('[HLTV Helper] chrome.storage.sync is unavailable; state not persisted');
-      }
+        console.log('[HLTV Helper] toggle change event triggered');
+        const val = !!toggle.checked;
 
-      // Also send a direct message to the active tab so content script updates immediately
-      if (chrome && chrome.tabs && chrome.tabs.query && chrome.tabs.sendMessage) {
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-          if (tabs && tabs[0]) {
-            chrome.tabs.sendMessage(tabs[0].id, {type: 'hltvBoosterToggle', enabled: val}, (resp) => {
-              if (chrome.runtime.lastError) {
-                // content script may not be present on that tab; ignore
-                console.debug('[HLTV Helper] popup: sendMessage error', chrome.runtime.lastError.message);
+        // Helper to persist and notify content scripts
+        const applyToggle = () => {
+          if (chrome.storage && chrome.storage.sync) {
+            chrome.storage.sync.set({[STORAGE_KEY]: val});
+            console.log('[HLTV Helper] popup set state=', val);
+          } else {
+            console.warn('[HLTV Helper] chrome.storage.sync is unavailable; state not persisted');
+          }
+
+          // Also send a direct message to the active tab so content script updates immediately
+          if (chrome && chrome.tabs && chrome.tabs.query && chrome.tabs.sendMessage) {
+            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+              if (tabs && tabs[0]) {
+                chrome.tabs.sendMessage(tabs[0].id, {type: 'hltvBoosterToggle', enabled: val}, (resp) => {
+                  if (chrome.runtime.lastError) {
+                    // content script may not be present on that tab; ignore
+                    console.debug('[HLTV Helper] popup: sendMessage error', chrome.runtime.lastError.message);
+                  } else {
+                    console.log('[HLTV Helper] popup: message sent to tab', tabs[0].id);
+                  }
+                });
               } else {
-                console.log('[HLTV Helper] popup: message sent to tab', tabs[0].id);
+                console.debug('[HLTV Helper] popup: no active tab to message');
               }
             });
-          } else {
-            console.debug('[HLTV Helper] popup: no active tab to message');
           }
-        });
-      }
+        };
+
+        // If enabling, ensure we have host permission for HLTV (optional permission flow)
+        if (val && chrome && chrome.permissions && chrome.permissions.contains) {
+          const origins = ['*://*.hltv.org/*'];
+          chrome.permissions.contains({origins}, (has) => {
+            if (has) {
+              applyToggle();
+            } else if (chrome.permissions.request) {
+              // ask the user for permission to access HLTV pages
+              chrome.permissions.request({origins}, (granted) => {
+                if (granted) {
+                  console.log('[HLTV Helper] HLTV host permission granted');
+                  applyToggle();
+                } else {
+                  console.warn('[HLTV Helper] HLTV host permission denied by user');
+                  // revert toggle in UI since permission was denied
+                  try { toggle.checked = false; } catch (e) {}
+                  // still persist false
+                  if (chrome && chrome.storage && chrome.storage.sync) chrome.storage.sync.set({[STORAGE_KEY]: false});
+                }
+              });
+            } else {
+              // permissions.request not available? apply anyway
+              applyToggle();
+            }
+          });
+        } else {
+          // disabling or permissions APIs not available -> just apply
+          applyToggle();
+        }
     });
   } else {
     console.warn('[HLTV Helper] chrome.storage.sync is unavailable; toggle state will not persist');

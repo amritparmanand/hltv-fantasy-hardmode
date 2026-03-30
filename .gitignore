@@ -21,6 +21,11 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Local Extension crx/etc
+*.crx
+*.pem
+*.zip
+
 # Miscellaneous
 *.log
 *.tmp

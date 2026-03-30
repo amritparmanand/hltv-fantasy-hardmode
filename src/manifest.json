@@ -11,16 +11,16 @@
   "permissions": [
     "storage"
   ],
-  "host_permissions": [
+  "optional_host_permissions": [
     "*://*.hltv.org/*"
   ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-    "16": "icons/16.png",
-    "48": "icons/48.png"
+      "16": "icons/16.png",
+      "48": "icons/48.png"
     },
-  "default_title": "HLTV Fantasy Hard Mode"
+    "default_title": "HLTV Fantasy Hard Mode"
   },
   "content_scripts": [
     {
