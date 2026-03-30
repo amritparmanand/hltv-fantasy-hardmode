@@ -1,9 +1,9 @@
 # HLTV Fantasy Hard Mode
 
-Do you ever feel like HLTV is giving you too much of a crutch when you are picking your player roles and boosters by giving you the trigger rates when you are picking? Then this extension is for you! This is a simple addon that silently removes the `.booster-trigger-container` and `.booster-trigger-rate-container` elements when you draft a fantasy roster so your HLTV fantasy experience is focused purely on your skill and intuition.
+Do you ever feel like HLTV is giving you too much of a crutch when you are picking your player roles and boosters by giving you the trigger rates when you are picking? Then this extension is for you! This is a simple addon that silently removes the `.booster-trigger-container` and `.booster-compact-mode-player-right` elements when you draft a fantasy roster so your HLTV fantasy experience is focused purely on your skill and intuition.
 
 Toggle behavior
-- Click the extension icon to open the popup. Use the "Auto-hide overlay" toggle to enable or disable the automatic hiding. When disabled the extension will restore any elements it previously hid during the session.
+- Click the extension icon to open the popup. Use the "HLTV Fantasy Hard Mode" toggle to enable or disable the automatic hiding. When disabled the extension will restore any elements it previously hid during the session.
 
 Local development
 1. Open Chrome (or Chromium) and go to chrome://extensions

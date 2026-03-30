@@ -1,5 +1,5 @@
 // Minimal content script: hides booster overlays when enabled in storage
-const BOOSTER_SELECTORS = ['.booster-trigger-container', '.booster-trigger-rate-container'];
+const BOOSTER_SELECTORS = ['.booster-trigger-rate-container'];
 const DATA_ATTR = 'data-hltv-booster-hidden';
 const STORAGE_KEY = 'hltvBoosterEnabled';
 const STYLE_ID = 'hltv-booster-blocker-style';

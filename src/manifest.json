@@ -1,10 +1,12 @@
 {
   "manifest_version": 3,
   "name": "HLTV Fantasy Hard Mode",
-  "version": "0.1.0",
-  "description": "Auto-hides HLTV's booster-trigger overlay during fantasy drafts.",
+  "version": "1.0.0",
+  "description": "Auto-hides HLTV's role and booster point trigger rates after fantasy drafts.",
   "icons": {
-    "128": "icons/icon128.svg"
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
   },
   "permissions": [
     "storage"
@@ -14,6 +16,10 @@
   ],
   "action": {
     "default_popup": "popup.html",
+    "default_icon": {
+    "16": "icons/16.png",
+    "48": "icons/48.png"
+    },
   "default_title": "HLTV Fantasy Hard Mode"
   },
   "content_scripts": [
