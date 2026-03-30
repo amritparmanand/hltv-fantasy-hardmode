@@ -1,0 +1,12 @@
+{
+  "name": "hltv-fantasy-roles-extension",
+  "version": "0.1.0",
+  "description": "Chrome extension scaffold for HLTV (Counter-Strike esports) integrations",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "mkdir -p dist && cp -r src/* dist/",
+    "prepare": "npm run build"
+  },
+  "keywords": ["hltv", "chrome-extension", "esports"],
+  "license": "MIT"
+}
