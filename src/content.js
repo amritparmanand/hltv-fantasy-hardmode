@@ -3,6 +3,7 @@ const BOOSTER_SELECTORS = ['.booster-trigger-container', '.booster-trigger-rate-
 const DATA_ATTR = 'data-hltv-booster-hidden';
 const STORAGE_KEY = 'hltvBoosterEnabled';
 const STYLE_ID = 'hltv-booster-blocker-style';
+const COMPACT_MODE_SELECTOR = '.booster-compact-mode-player-right';
 
 let enabled = true;
 
@@ -12,7 +13,8 @@ function hideBoosterOnce() {
   if (style) return; // already applied
   style = document.createElement('style');
   style.id = STYLE_ID;
-  style.textContent = BOOSTER_SELECTORS.join(', ') + ' { display: none !important; }';
+  // include the compact mode selector so side rates are also hidden by the same style
+  style.textContent = BOOSTER_SELECTORS.join(', ') + ', ' + COMPACT_MODE_SELECTOR + ' { display: none !important; }';
   (document.head || document.documentElement).appendChild(style);
   console.log('[HLTV Helper] applied hide style for boosters');
 }
@@ -27,6 +29,12 @@ function restoreHidden() {
   }
 }
 
+// NOTE: compact mode selector is hidden via the same STYLE_ID as other boosters
+// so we don't need a separate observer that unconditionally hides it.
+
+// toggleVisibility and on-page toggle were removed — visibility is controlled
+// by the popup (via storage/runtime messages) and the global injected style.
+
 console.log('[HLTV Helper] content script loaded');
 
 // Initialize enabled flag from storage (default true)
@@ -35,6 +43,7 @@ if (chrome && chrome.storage && chrome.storage.sync) {
     enabled = !!result[STORAGE_KEY];
     console.log('[HLTV Helper] initial enabled=', enabled);
     if (enabled) hideBoosterOnce(); else restoreHidden();
+    // No on-page toggle: popup/storage controls the global style. Nothing else to sync.
   });
 
   // React to remote toggle changes
